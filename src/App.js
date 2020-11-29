@@ -1,8 +1,8 @@
 import React from 'react';
-import Input from './components/Input';
+import Inputs from './components/Inputs';
 
 function App() {
-  return <Input />;
+  return <Inputs />;
 }
 
 export default App;
