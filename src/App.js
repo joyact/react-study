@@ -1,8 +1,8 @@
 import React from 'react';
-import Counter from './components/Counter';
+import Input from './components/Input';
 
 function App() {
-  return <Counter />;
+  return <Input />;
 }
 
 export default App;
