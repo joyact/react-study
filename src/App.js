@@ -1,8 +1,8 @@
 import React from 'react';
-import Inputs from './components/Inputs';
+import UserList from './components/UserList';
 
 function App() {
-  return <Inputs />;
+  return <UserList />;
 }
 
 export default App;
