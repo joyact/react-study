@@ -61,6 +61,10 @@ function App() {
     nextId.current += 1;
   };
 
+  const handleRemove = (id) => {
+    setList(list.filter((user) => user.id !== id));
+  };
+
   return (
     <>
       <NewUser
@@ -69,7 +73,7 @@ function App() {
         onChange={handleChange}
         onCreate={handleCreate}
       />
-      <UserList list={list} />
+      <UserList list={list} onRemove={handleRemove} />
     </>
   );
 }
