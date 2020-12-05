@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from 'react';
+import React, { useRef, useState, useMemo, useCallback } from 'react';
 import NewUser from './components/NewUser';
 import UserList from './components/UserList';
 
@@ -40,15 +40,18 @@ function App() {
   // useRef를 변수에 저장해서 사용한다
   const nextId = useRef(4);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputs({
-      ...inputs,
-      [name]: value,
-    });
-  };
+  const handleChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      setInputs({
+        ...inputs,
+        [name]: value,
+      });
+    },
+    [inputs]
+  );
 
-  const handleCreate = () => {
+  const handleCreate = useCallback(() => {
     // input에 입력된 값
     const user = {
       id: nextId.current,
@@ -67,19 +70,25 @@ function App() {
     });
 
     nextId.current += 1;
-  };
+  }, [username, email, list]);
 
-  const handleRemove = (id) => {
-    setList(list.filter((user) => user.id !== id));
-  };
+  const handleRemove = useCallback(
+    (id) => {
+      setList(list.filter((user) => user.id !== id));
+    },
+    [list]
+  );
 
-  const handleToggle = (id) => {
-    setList(
-      list.map((user) =>
-        user.id === id ? { ...user, active: !user.active } : user
-      )
-    );
-  };
+  const handleToggle = useCallback(
+    (id) => {
+      setList(
+        list.map((user) =>
+          user.id === id ? { ...user, active: !user.active } : user
+        )
+      );
+    },
+    [list]
+  );
 
   // list가 바뀔 때만 호출 되고, 그 외는 재사용 됨
   const count = useMemo(() => countActiveUsers(list), [list]);
