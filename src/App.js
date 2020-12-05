@@ -15,16 +15,19 @@ function App() {
       id: 1,
       username: 'velopert',
       email: 'public.velopert@gmail.com',
+      active: true,
     },
     {
       id: 2,
       username: 'joy',
       email: 'joy@gmail.com',
+      active: false,
     },
     {
       id: 3,
       username: 'lee',
       email: 'lee@gmail.com',
+      active: false,
     },
   ]);
 
@@ -65,6 +68,14 @@ function App() {
     setList(list.filter((user) => user.id !== id));
   };
 
+  const handleToggle = (id) => {
+    setList(
+      list.map((user) =>
+        user.id === id ? { ...user, active: !user.active } : user
+      )
+    );
+  };
+
   return (
     <>
       <NewUser
@@ -73,7 +84,7 @@ function App() {
         onChange={handleChange}
         onCreate={handleCreate}
       />
-      <UserList list={list} onRemove={handleRemove} />
+      <UserList list={list} onRemove={handleRemove} onToggle={handleToggle} />
     </>
   );
 }
