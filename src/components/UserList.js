@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-function User({ user, onRemove, onToggle }) {
+const User = React.memo(function User({ user, onRemove, onToggle }) {
   const { username, email, id, active } = user;
 
   /*
@@ -16,7 +16,7 @@ function User({ user, onRemove, onToggle }) {
       console.log('컴포넌트가 화면에서 사라짐');
       console.log(user);
     };
-  }, [user]); // props 값 혹은 useState 값을 가져오는 경우 depth배열에 추가
+  }, [user]); // props 값 혹은 useState 값을 가져오는 경우 deps배열에 추가
   */
 
   return (
@@ -34,7 +34,7 @@ function User({ user, onRemove, onToggle }) {
       <button onClick={() => onRemove(id)}>X</button>
     </div>
   );
-}
+});
 
 function UserList({ list, onRemove, onToggle }) {
   return (
@@ -51,4 +51,4 @@ function UserList({ list, onRemove, onToggle }) {
   );
 }
 
-export default UserList;
+export default React.memo(UserList);

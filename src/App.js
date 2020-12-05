@@ -61,7 +61,7 @@ function App() {
 
     // 기존 배열에 새 항목 추가해서 렌더링
     // setList([...list, user]);
-    setList(list.concat(user));
+    setList((list) => list.concat(user));
 
     // input reset
     setInputs({
@@ -70,25 +70,21 @@ function App() {
     });
 
     nextId.current += 1;
-  }, [username, email, list]);
+  }, [username, email]);
 
-  const handleRemove = useCallback(
-    (id) => {
-      setList(list.filter((user) => user.id !== id));
-    },
-    [list]
-  );
+  const handleRemove = useCallback((id) => {
+    setList((list) => list.filter((user) => user.id !== id));
+    // 함수형 업데이트. dependency에 list 넣지 않아도 됨
+    // parameter가 최신 list를 조회함
+  }, []);
 
-  const handleToggle = useCallback(
-    (id) => {
-      setList(
-        list.map((user) =>
-          user.id === id ? { ...user, active: !user.active } : user
-        )
-      );
-    },
-    [list]
-  );
+  const handleToggle = useCallback((id) => {
+    setList((list) =>
+      list.map((user) =>
+        user.id === id ? { ...user, active: !user.active } : user
+      )
+    );
+  }, []);
 
   // list가 바뀔 때만 호출 되고, 그 외는 재사용 됨
   const count = useMemo(() => countActiveUsers(list), [list]);
