@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 function User({ user, onRemove, onToggle }) {
   const { username, email, id, active } = user;
 
+  /*
   useEffect(() => {
     // 컴포넌트가 마운트될 때
     // props -> state / REST API / setInterval, setTimeout
@@ -16,6 +17,7 @@ function User({ user, onRemove, onToggle }) {
       console.log(user);
     };
   }, [user]); // props 값 혹은 useState 값을 가져오는 경우 depth배열에 추가
+  */
 
   return (
     <div>

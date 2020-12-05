@@ -1,6 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import NewUser from './components/NewUser';
 import UserList from './components/UserList';
+
+function countActiveUsers(users) {
+  console.log('활성 사용자 수를 세는 중...');
+  return users.filter((user) => user.active).length;
+}
 
 function App() {
   const [inputs, setInputs] = useState({
@@ -76,6 +81,9 @@ function App() {
     );
   };
 
+  // list가 바뀔 때만 호출 되고, 그 외는 재사용 됨
+  const count = useMemo(() => countActiveUsers(list), [list]);
+
   return (
     <>
       <NewUser
@@ -85,6 +93,7 @@ function App() {
         onCreate={handleCreate}
       />
       <UserList list={list} onRemove={handleRemove} onToggle={handleToggle} />
+      <div>활성 사용자 수 : {count}</div>
     </>
   );
 }
