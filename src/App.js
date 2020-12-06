@@ -1,4 +1,10 @@
-import React, { useRef, useReducer, useMemo, useCallback } from 'react';
+import React, {
+  useRef,
+  useReducer,
+  useMemo,
+  useCallback,
+  createContext,
+} from 'react';
 import NewUser from './components/NewUser';
 import UserList from './components/UserList';
 import useInputs from './hook/useInputs';
@@ -55,6 +61,8 @@ function reducer(state, action) {
   }
 }
 
+export const UserDispatch = createContext(null);
+
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [form, handleChange, reset] = useInputs({
@@ -82,34 +90,20 @@ function App() {
     reset();
   }, [username, email, reset]);
 
-  const handleRemove = useCallback((id) => {
-    dispatch({
-      type: 'REMOVE_USER',
-      id,
-    });
-  }, []);
-
-  const handleToggle = useCallback((id) => {
-    dispatch({
-      type: 'TOGGLE_USER',
-      id,
-    });
-  }, []);
-
   // list가 바뀔 때만 호출 되고, 그 외는 재사용 됨
   const count = useMemo(() => countActiveUsers(list), [list]);
 
   return (
-    <>
+    <UserDispatch.Provider value={dispatch}>
       <NewUser
         username={username}
         email={email}
         onChange={handleChange}
         onCreate={handleCreate}
       />
-      <UserList list={list} onRemove={handleRemove} onToggle={handleToggle} />
+      <UserList list={list} />
       <div>활성 사용자 수 : {count}</div>
-    </>
+    </UserDispatch.Provider>
   );
 }
 
