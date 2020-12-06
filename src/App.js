@@ -1,6 +1,7 @@
 import React, { useRef, useReducer, useMemo, useCallback } from 'react';
 import NewUser from './components/NewUser';
 import UserList from './components/UserList';
+import useInputs from './hook/useInputs';
 
 function countActiveUsers(users) {
   console.log('활성 사용자 수를 세는 중...');
@@ -8,10 +9,6 @@ function countActiveUsers(users) {
 }
 
 const initialState = {
-  inputs: {
-    username: '',
-    email: '',
-  },
   list: [
     {
       id: 1,
@@ -36,14 +33,6 @@ const initialState = {
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'CHANGE_INPUT':
-      return {
-        ...state,
-        inputs: {
-          ...state.inputs,
-          [action.name]: action.value,
-        },
-      };
     case 'CREATE_USER':
       return {
         inputs: initialState.inputs,
@@ -68,22 +57,16 @@ function reducer(state, action) {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [form, handleChange, reset] = useInputs({
+    username: '',
+    email: '',
+  });
+  const { username, email } = form;
   const { list } = state;
-  const { username, email } = state.inputs;
 
   // 굳이 컴포넌트를 리렌더링 시킬 필요가 없는 경우
   // useRef를 변수에 저장해서 사용한다
   const nextId = useRef(4);
-
-  const handleChange = useCallback(
-    (e) => {
-      const { name, value } = e.target;
-      dispatch({
-        type: 'CHANGE_INPUT',
-        name,
-        value,
-      });
-  }, []);
 
   const handleCreate = useCallback(() => {
     dispatch({
@@ -96,7 +79,8 @@ function App() {
     });
 
     nextId.current += 1;
-  }, [username, email]);
+    reset();
+  }, [username, email, reset]);
 
   const handleRemove = useCallback((id) => {
     dispatch({
