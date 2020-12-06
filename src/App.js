@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, useCallback } from 'react';
+import React, { useRef, useReducer, useMemo, useCallback } from 'react';
 import NewUser from './components/NewUser';
 import UserList from './components/UserList';
 
@@ -7,15 +7,12 @@ function countActiveUsers(users) {
   return users.filter((user) => user.active).length;
 }
 
-function App() {
-  const [inputs, setInputs] = useState({
+const initialState = {
+  inputs: {
     username: '',
     email: '',
-  });
-
-  const { username, email } = inputs;
-
-  const [list, setList] = useState([
+  },
+  list: [
     {
       id: 1,
       username: 'velopert',
@@ -34,7 +31,45 @@ function App() {
       email: 'lee@gmail.com',
       active: false,
     },
-  ]);
+  ],
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'CHANGE_INPUT':
+      return {
+        ...state,
+        inputs: {
+          ...state.inputs,
+          [action.name]: action.value,
+        },
+      };
+    case 'CREATE_USER':
+      return {
+        inputs: initialState.inputs,
+        list: state.list.concat(action.user),
+      };
+    case 'TOGGLE_USER':
+      return {
+        ...state,
+        list: state.list.map((user) =>
+          user.id === action.id ? { ...user, active: !user.active } : user
+        ),
+      };
+    case 'REMOVE_USER':
+      return {
+        ...state,
+        list: state.list.filter((user) => user.id !== action.id),
+      };
+    default:
+      throw new Error('Unhandled action');
+  }
+}
+
+function App() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const { list } = state;
+  const { username, email } = state.inputs;
 
   // 굳이 컴포넌트를 리렌더링 시킬 필요가 없는 경우
   // useRef를 변수에 저장해서 사용한다
@@ -43,47 +78,38 @@ function App() {
   const handleChange = useCallback(
     (e) => {
       const { name, value } = e.target;
-      setInputs({
-        ...inputs,
-        [name]: value,
+      dispatch({
+        type: 'CHANGE_INPUT',
+        name,
+        value,
       });
-    },
-    [inputs]
-  );
+  }, []);
 
   const handleCreate = useCallback(() => {
-    // input에 입력된 값
-    const user = {
-      id: nextId.current,
-      username,
-      email,
-    };
-
-    // 기존 배열에 새 항목 추가해서 렌더링
-    // setList([...list, user]);
-    setList((list) => list.concat(user));
-
-    // input reset
-    setInputs({
-      username: '',
-      email: '',
+    dispatch({
+      type: 'CREATE_USER',
+      user: {
+        id: nextId.current,
+        username,
+        email,
+      },
     });
 
     nextId.current += 1;
   }, [username, email]);
 
   const handleRemove = useCallback((id) => {
-    setList((list) => list.filter((user) => user.id !== id));
-    // 함수형 업데이트. dependency에 list 넣지 않아도 됨
-    // parameter가 최신 list를 조회함
+    dispatch({
+      type: 'REMOVE_USER',
+      id,
+    });
   }, []);
 
   const handleToggle = useCallback((id) => {
-    setList((list) =>
-      list.map((user) =>
-        user.id === id ? { ...user, active: !user.active } : user
-      )
-    );
+    dispatch({
+      type: 'TOGGLE_USER',
+      id,
+    });
   }, []);
 
   // list가 바뀔 때만 호출 되고, 그 외는 재사용 됨
