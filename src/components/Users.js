@@ -1,32 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer, useEffect } from 'react';
 import axios from 'axios';
 
+// LOADING, SUCCESS, ERROR
+function reducer(state, action) {
+  switch (action.type) {
+    case 'LOADING':
+      return {
+        loading: true,
+        data: null,
+        error: null,
+      };
+    case 'SUCCESS':
+      return {
+        loading: false,
+        data: action.data,
+        error: null,
+      };
+    case 'ERROR':
+      return {
+        loading: false,
+        data: null,
+        error: action.error,
+      };
+    default:
+      throw new Error(`Unhandled action type: ${action.type}`);
+  }
+}
+
 function Users() {
-  const [users, setUsers] = useState(null);
-  const [loading, setLoading] = useState(false); // 현재 API가 요청중인지 아닌지
-  const [error, setError] = useState(null);
+  const [state, dispatch] = useReducer(reducer, {
+    loading: false,
+    data: null,
+    error: null,
+  });
 
   // 렌더링 시
   const fetchUsers = async () => {
+    dispatch({ type: 'LOADING' });
     try {
-      setUsers(null); // 초기화
-      setError(null); // 초기화
-      setLoading(true); // 로딩 시작
       const response = await axios.get(
         'https://jsonplaceholder.typicode.com/users/'
       );
-      setUsers(response.data); // 결과값
+      dispatch({ type: 'SUCCESS', data: response.data });
     } catch (e) {
-      console.log(e.response.status); // 에러 종류(404)
-      setError(e);
+      dispatch({ type: 'ERROR', error: e });
     }
-    setLoading(false); // 로딩 완료
   };
 
   useEffect(() => {
     fetchUsers();
   }, []);
 
+  const { loading, data: users, error } = state;
   if (loading) return <div>로딩중..</div>;
   if (error) return <div>에러가 발생했습니다</div>;
   if (!users) return null;
