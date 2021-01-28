@@ -1,14 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useAsync } from 'react-async';
 import User from './User';
-
-async function getUsers() {
-  const response = await axios.get(
-    'https://jsonplaceholder.typicode.com/users/'
-  );
-  return response.data;
-}
 
 function Users() {
   const [userId, setUserId] = useState(null);
