@@ -72,3 +72,37 @@ function usersReducer(state, action) {
       throw new Error('Unhandled action type', action.type);
   }
 }
+
+// state's context 와 dispatch's context 따로 만들어 주기
+const UsersStateContext = createContext(null);
+const UsersDispatchContext = createContext(null);
+
+// 두가지 context들의 Provider로 감싸주는 컴포넌트
+export function UsersProvider({ children }) {
+  const [state, dispatch] = useReducer(usersReducer, initialState);
+  return (
+    <UsersStateContext.Provider value={state}>
+      <UsersDispatchContext.Provider value={dispatch}>
+        {children}
+      </UsersDispatchContext.Provider>
+    </UsersStateContext.Provider>
+  );
+}
+
+// state를 쉽게 조회할 수 있게 만든 custom hook
+export function useUsersState() {
+  const state = useContext(UsersStateContext);
+  if (!state) {
+    throw new Error('Cannot find UserProvider');
+  }
+  return state;
+}
+
+// dispatch를 쉽게 조회할 수 있게 만든 custom hook
+export function useUsersDispatch() {
+  const dispatch = useContext(UsersDispatchContext);
+  if (!dispatch) {
+    throw new Error('Cannot find UserProvider');
+  }
+  return dispatch;
+}
