@@ -1,5 +1,4 @@
 import React, { createContext, useReducer, useContext } from 'react';
-import axios from 'axios';
 
 // UsersContext 에서 사용할 기본 상태
 const initialState = {

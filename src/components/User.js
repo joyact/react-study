@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useUsersState, useUsersDispatch, getUser } from './UsersContext';
+import { useUsersState, useUsersDispatch, getUser } from '../hook/UsersContext';
 
 function User({ id }) {
   const state = useUsersState();

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import User from './User';
-import { useUsersDispatch, useUsersState, getUsers } from './UsersContext';
+import {
+  useUsersState,
+  useUsersDispatch,
+  getUsers,
+} from '../hook/UsersContext';
 
 function Users() {
   const [userId, setUserId] = useState(null);

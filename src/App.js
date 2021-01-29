@@ -1,6 +1,6 @@
 import React from 'react';
 import Users from './components/Users';
-import { UsersProvider } from './components/UsersContext';
+import { UsersProvider } from './hook/UsersContext';
 
 function App() {
   return (
