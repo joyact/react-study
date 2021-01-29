@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { useAsync } from 'react-async';
 import User from './User';
+import { useUsersDispatch, useUsersState, getUsers } from './UsersContext';
 
 function Users() {
   const [userId, setUserId] = useState(null);
-  const { data: users, error, isLoading, reload, run } = useAsync({
-    deferFn: getUsers, // run이 동작한 후에 데이터를 불러옴
-  });
+  const state = useUsersState();
+  const dispatch = useUsersDispatch();
 
-  if (isLoading) return <div>로딩중..</div>;
+  const { loading, data: users, error } = state.users;
+
+  const fetchData = () => {
+    getUsers(dispatch);
+  };
+
+  if (loading) return <div>로딩중..</div>;
   if (error) return <div>에러가 발생했습니다</div>;
-  if (!users) return <button onClick={run}>Loading</button>;
+  if (!users) return <button onClick={fetchData}>Loading</button>;
 
   return (
     <>
@@ -21,7 +26,7 @@ function Users() {
           </li>
         ))}
       </ul>
-      <button onClick={reload}>Reloading</button>
+      <button onClick={fetchData}>Reloading</button>
       {userId && <User id={userId} />}
     </>
   );

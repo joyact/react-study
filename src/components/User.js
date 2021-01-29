@@ -1,14 +1,17 @@
-import React from 'react';
-import { useAsync } from 'react-async';
+import React, { useEffect } from 'react';
+import { useUsersState, useUsersDispatch, getUser } from './UsersContext';
 
 function User({ id }) {
-  const { data: user, error, isLoading } = useAsync({
-    promiseFn: getUser,
-    id,
-    watch: id, // id가 바뀔때 마다 함수 호출 (deps와 같은기능)
-  });
+  const state = useUsersState();
+  const dispatch = useUsersDispatch();
 
-  if (isLoading) return <div>로딩중..</div>;
+  useEffect(() => {
+    getUser(dispatch, id);
+  }, [dispatch, id]);
+
+  const { loading, data: user, error } = state.user;
+
+  if (loading) return <div>로딩중..</div>;
   if (error) return <div>에러가 발생했습니다.</div>;
   if (!user) return null;
 

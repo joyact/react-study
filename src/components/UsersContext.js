@@ -1,4 +1,5 @@
 import React, { createContext, useReducer, useContext } from 'react';
+import axios from 'axios';
 
 // UsersContext 에서 사용할 기본 상태
 const initialState = {
@@ -23,6 +24,7 @@ const loadingState = {
 
 // 성공했을 때의 상태 만들어주는 함수
 const success = (data) => ({
+  // data를 가져와서 객체로 만듬
   loading: false,
   data,
   error: null,
@@ -30,6 +32,7 @@ const success = (data) => ({
 
 // 실패했을 때의 상태 만들어주는 함수
 const error = (error) => ({
+  // error를 가져와서 객체로 만듬
   loading: false,
   data: null,
   error: error,
@@ -74,6 +77,7 @@ function usersReducer(state, action) {
 }
 
 // state's context 와 dispatch's context 따로 만들어 주기
+// 컴포넌트 최적화 시 유리
 const UsersStateContext = createContext(null);
 const UsersDispatchContext = createContext(null);
 
@@ -107,7 +111,8 @@ export function useUsersDispatch() {
   return dispatch;
 }
 
-async function getUsers(dispatch) {
+// API 처리 함수 만들기
+export async function getUsers(dispatch) {
   dispatch({ type: 'GET_USERS' });
   try {
     const response = await axios.get(
@@ -125,7 +130,7 @@ async function getUsers(dispatch) {
   }
 }
 
-async function getUser(dispatch, id) {
+export async function getUser(dispatch, id) {
   dispatch({ type: 'GET_USER' });
   try {
     const response = await axios.get(
