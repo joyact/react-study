@@ -18,3 +18,63 @@ export default function createAsyncDispatcher(type, promiseFn) {
 
   return actionHandler;
 }
+
+export const initialAsyncState = {
+  loading: false,
+  data: null,
+  error: null,
+};
+
+// 로딩중일 때 바뀔 상태 객체
+const loadingState = {
+  loading: true,
+  data: null,
+  error: null,
+};
+
+// 성공했을 때의 상태 만들어주는 함수
+const success = (data) => ({
+  // data를 가져와서 객체로 만듬
+  loading: false,
+  data,
+  error: null,
+});
+
+// 실패했을 때의 상태 만들어주는 함수
+const error = (error) => ({
+  // error를 가져와서 객체로 만듬
+  loading: false,
+  data: null,
+  error: error,
+});
+
+// 세가지 액션을 처리하는 리듀서 생성
+// type = 액션 타입, key = 리듀서에서 사용할 필드 이름 (user, users)
+export function createAsyncHandler(type, key) {
+  const SUCCESS = `${type}_SUCCESS`;
+  const ERROR = `${type}_ERROR`;
+
+  // 리듀서 핸들러
+  function handler(state, action) {
+    switch (action.type) {
+      case type:
+        return {
+          ...state,
+          [key]: loadingState,
+        };
+      case SUCCESS:
+        return {
+          ...state,
+          [key]: success(action.data),
+        };
+      case ERROR:
+        return {
+          ...state,
+          [key]: error(action.error),
+        };
+      default:
+        return state;
+    }
+  }
+  return handler;
+}
