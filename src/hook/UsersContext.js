@@ -1,4 +1,6 @@
 import React, { createContext, useReducer, useContext } from 'react';
+import * as api from './api';
+import createAsyncDispatcher from './asyncActionUtils';
 
 // UsersContext 에서 사용할 기본 상태
 const initialState = {
@@ -110,39 +112,5 @@ export function useUsersDispatch() {
   return dispatch;
 }
 
-// API 처리 함수 만들기
-export async function getUsers(dispatch) {
-  dispatch({ type: 'GET_USERS' });
-  try {
-    const response = await axios.get(
-      'https://jsonplaceholder.typicode.com/users/'
-    );
-    dispatch({
-      type: 'GET_USERS_SUCCESS',
-      data: response.data,
-    });
-  } catch (e) {
-    dispatch({
-      type: 'GET_USERS_ERROR',
-      error: e,
-    });
-  }
-}
-
-export async function getUser(dispatch, id) {
-  dispatch({ type: 'GET_USER' });
-  try {
-    const response = await axios.get(
-      `https://jsonplaceholder.typicode.com/users/${id}`
-    );
-    dispatch({
-      type: 'GET_USER_SUCCESS',
-      data: response.data,
-    });
-  } catch (e) {
-    dispatch({
-      type: 'GET_USER_ERROR',
-      error: e,
-    });
-  }
-}
+export const getUsers = createAsyncDispatcher('GET_USERS', api.getUsers);
+export const getUser = createAsyncDispatcher('GET_USER', api.getUser);

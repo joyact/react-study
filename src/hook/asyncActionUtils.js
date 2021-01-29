@@ -1,0 +1,20 @@
+// 파라미터로 액션의 타입 (GET_USER) 과 Promise 를 만들어주는 함수를 받아옵니다.
+export default function createAsyncDispatcher(type, promiseFn) {
+  // 성공, 실패에 대한 액션 타입 문자열 준비
+  const SUCCESS = `${type}_SUCCESS`;
+  const ERROR = `${type}_ERROR`;
+
+  // 새로운 함수 생성
+  // ...rest를 사용하여 나머지 파라미터를 rest 배열에 담기
+  async function actionHandler(dispatch, ...rest) {
+    dispatch({ type }); // 요청 시작
+    try {
+      const data = await promiseFn(...rest); // rest 배열을 spread로 넣어준다
+      dispatch({ type: SUCCESS, data }); // 성공
+    } catch (e) {
+      dispatch({ type: ERROR, error: e }); // 실패
+    }
+  }
+
+  return actionHandler;
+}
