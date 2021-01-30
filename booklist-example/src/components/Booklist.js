@@ -4,7 +4,6 @@ import BookDetail from './BookDetail';
 
 function Booklist() {
   const { books } = useContext(BookContext);
-  console.log(books);
   return books.length ? (
     <div className="book-list">
       <ul>
