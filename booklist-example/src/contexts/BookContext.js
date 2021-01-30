@@ -1,23 +1,29 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useReducer } from 'react';
 
 export const BookContext = createContext();
 
+const bookReducer = (state, action) => {
+  switch (action.type) {
+    case 'ADD_BOOK':
+      return [
+        ...state,
+        {
+          title: action.book.title,
+          author: action.book.author,
+          id: Date.now(),
+        },
+      ];
+    case 'REMOVE_BOOK':
+      return state.filter((book) => book.id !== action.id);
+    default:
+      state;
+  }
+};
+
 function BookContextProvider({ children }) {
-  const [books, setBooks] = useState([
-    { title: 'name of the wind', author: 'patrick rothfuss', id: 1 },
-    { title: 'the final empire', author: 'brandon sanderson', id: 2 },
-  ]);
-
-  const addBook = (title, author) => {
-    setBooks([...books, { title, author, id: Date.now() }]);
-  };
-
-  const removeBook = (id) => {
-    setBooks(books.filter((book) => book.id !== id));
-  };
-
+  const [books, dispatch] = useReducer(bookReducer, []);
   return (
-    <BookContext.Provider value={{ books, addBook, removeBook }}>
+    <BookContext.Provider value={{ books, dispatch }}>
       {children}
     </BookContext.Provider>
   );
