@@ -3,8 +3,8 @@ import { ThemeContext } from '../contexts/ThemeContext';
 
 function Booklist() {
   const context = useContext(ThemeContext);
-  const { isLightTheme, light, dark } = context;
-  const theme = isLightTheme ? light : dark;
+  const { isLight, light, dark } = context;
+  const theme = isLight ? light : dark;
 
   return (
     <div
