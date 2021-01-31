@@ -21,12 +21,14 @@ function BookForm() {
   return (
     <form onSubmit={handleSubmit}>
       <input
+        required
         type="text"
         value={title}
         placeholder="Book Title"
         onChange={(e) => setTitle(e.target.value)}
       />
       <input
+        required
         type="text"
         value={author}
         placeholder="Book Author"
