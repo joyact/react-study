@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import Home from './pages/Home';
 import About from './pages/About';
+import Profile from './components/Profile';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
       <hr />
       <Route path="/" component={Home} exact />
       <Route path="/about" component={About} />
+      <Route path="/profile/:username" component={Profile} />
     </>
   );
 }
