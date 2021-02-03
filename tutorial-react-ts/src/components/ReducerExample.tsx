@@ -1,54 +1,12 @@
-import React, { useReducer } from 'react';
-
-type Color = 'red' | 'orange' | 'yellow';
-
-type State = {
-  count: number;
-  color: Color;
-  text: string;
-  isGood: boolean;
-};
-
-type Action =
-  | { type: 'SET_COUNT'; count: number }
-  | { type: 'SET_COLOR'; color: Color }
-  | { type: 'SET_TEXT'; text: string }
-  | { type: 'TOGGLE_GOOD' };
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'SET_COUNT':
-      return {
-        ...state,
-        count: action.count,
-      };
-    case 'SET_COLOR':
-      return {
-        ...state,
-        color: action.color,
-      };
-    case 'SET_TEXT':
-      return {
-        ...state,
-        text: action.text,
-      };
-    case 'TOGGLE_GOOD':
-      return {
-        ...state,
-        isGood: !state.isGood,
-      };
-    default:
-      throw new Error('Unhandled action type');
-  }
-}
+import React from 'react';
+import {
+  useDispatchContext,
+  useStateContext,
+} from '../contexts/ContextExample';
 
 function ReducerExample() {
-  const [state, dispatch] = useReducer(reducer, {
-    count: 0,
-    text: 'hello',
-    color: 'red',
-    isGood: true,
-  });
+  const state = useStateContext();
+  const dispatch = useDispatchContext();
 
   const setCount = () =>
     dispatch({ type: 'SET_COUNT', count: state.count + 1 });
