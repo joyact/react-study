@@ -4,6 +4,8 @@ import Counter from './components/Counter';
 import MyForm from './components/MyForm';
 import ReducerExample from './components/ReducerExample';
 import { ContextProvider } from './contexts/ContextExample';
+import MyTodo from './components/MyTodo';
+import './index.css';
 
 const App: React.FC = () => {
   const onClick = (name: string) => {
@@ -16,10 +18,11 @@ const App: React.FC = () => {
 
   return (
     <ContextProvider>
-      <Greetings name="JOY" onClick={onClick} />;
+      <Greetings name="JOY" onClick={onClick} />
       <Counter />
       <MyForm onSubmit={onSubmit} />
       <ReducerExample />
+      <MyTodo />
     </ContextProvider>
   );
 };
